@@ -1,15 +1,17 @@
 import { Request, Response, Router } from 'express';
-import multer from 'multer';
 import BaseController from '../controller/BaseController';
 import MultiformDataController from '../controller/implementations/MultiformDataController';
 import { MulterMiddleware } from '../middlewares/multerMidleware';
+import { IMultiformDataService } from '../services/IMultiformDataService';
+import MultiformDataService from '../services/implementations/MultiformDataService';
 
 const multerMiddleware = new MulterMiddleware();
 
 const multiFormRouter = Router();
 
-const multiformDataController: BaseController = new MultiformDataController();
+const multiDataService: IMultiformDataService = new MultiformDataService();
 
+const multiformDataController: BaseController = new MultiformDataController(multiDataService);
 
 multiFormRouter.post(
   '/img',

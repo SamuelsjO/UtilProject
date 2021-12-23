@@ -1,16 +1,13 @@
-import { NextFunction, Request, Response } from "express";
-import mime from "mime";
-import multer, { Options } from "multer";
-import BaseResponse from "../BaseResponse/BaseResponse";
-import AppValidationError from "../errors/AppValidationError";
-import { multerFields } from "../helper/multerFields";
+import { NextFunction, Request, Response } from 'express';
+import mime from 'mime';
+import multer, { Options } from 'multer';
+import BaseResponse from '../BaseResponse/BaseResponse';
+import AppValidationError from '../errors/AppValidationError';
+import { multerErrors } from '../errors/errors';
+import { multerFields } from '../helper/multerFields';
 
 export class MulterMiddleware extends BaseResponse {
-  async execute(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void | Response> {
+  async execute(req: Request, res: Response, next: NextFunction): Promise<void | Response> {
     try {
       const multerConfig: Options = {
         limits: {
@@ -18,12 +15,12 @@ export class MulterMiddleware extends BaseResponse {
         },
         fileFilter: (req, file, cb) => {
           const type = mime.extension(file.mimetype);
-          const allowFormats = ["pdf", "PDF"];
+          const allowFormats = ['pdf', 'PDF'];
 
           if (allowFormats.includes(`${type}`)) {
             cb(null, true);
           } else {
-            cb(new Error("error de type"));
+            cb(new Error('error de type'));
           }
         },
       };
@@ -42,21 +39,18 @@ export class MulterMiddleware extends BaseResponse {
           maxCount: 1,
         },
       ]);
-      multerArch(req, res, (err) => {
+      multerArch(req, res, err => {
         if (req.files) {
           const fileKeys: string[] = Object.keys(req.files);
           const filesReq: any = req.files;
 
           fileKeys.forEach((key: string) => {
             const file = filesReq[key][0];
-            const buffer = Buffer.from(file.buffer).toString("base64");
+            const buffer = Buffer.from(file.buffer).toString('base64');
 
-            if (file.fieldname === multerFields.clinicalEvolution)
-              req.body.clinicalEvolution = buffer;
-            if (file.fieldname === multerFields.labReportResult)
-              req.body.labReportResult = buffer;
-            if (file.fieldname === multerFields.reportImageResult)
-              req.body.reportImageResult = buffer;
+            if (file.fieldname === multerFields.clinicalEvolution) req.body.clinicalEvolution = buffer;
+            if (file.fieldname === multerFields.labReportResult) req.body.labReportResult = buffer;
+            if (file.fieldname === multerFields.reportImageResult) req.body.reportImageResult = buffer;
           });
         }
 
@@ -64,21 +58,15 @@ export class MulterMiddleware extends BaseResponse {
           let errCode = err.code;
           let errMessage = err.message || err;
 
-          console.log("err :>> ", err);
-
-          if (err.message?.includes("messages.file.multerInvalidDirectory")) {
+          if (err.message?.includes(multerErrors.multerMaxLength)) {
             errCode = 400;
-            errMessage = "messages.file.invalidDirectory";
+            errMessage = multerErrors.maxLength;
           }
 
-          if (err.Error == "error de type") {
-            errCode = 400;
-            errMessage = "messages.file.maxLength";
-          }
-
-          return res
-            .status(400)
-            .send({ code: 400, message: "Erro valid type" });
+          return res.status(400).send({
+            code: 400,
+            message: multerErrors.valid,
+          });
         }
         return next();
       });

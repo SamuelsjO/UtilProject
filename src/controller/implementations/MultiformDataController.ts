@@ -1,24 +1,26 @@
-import { Request, Response } from "express";
-import AppValidationError from "../../errors/AppValidationError";
-import BaseController from "../BaseController";
+import { Request, Response } from 'express';
+import AppValidationError from '../../errors/AppValidationError';
+import { IRequestMultiPartDTO } from '../../models/dto/IRequestMultipartDTO';
+import { IMultiformDataService } from '../../services/IMultiformDataService';
+import BaseController from '../BaseController';
 
 export default class MultiformDataController extends BaseController {
-  protected async executeImpl(
-    req: Request,
-    res: Response<any, Record<string, any>>
-  ): Promise<Response<any, Record<string, any>>> {
-    try {
-      if (req.files) {
-        const clinicalEvolution =
-          "ClinicalEvolution: " + req.body.clinicalEvolution;
-        const labReportResult = "LabResportResult: " + req.body.labReportResult;
-        const imageResult = "ImageResult: " + req.body.imageResult;
+  constructor(private multiDataService: IMultiformDataService) {
+    super();
+  }
 
+  protected async executeImpl(req: Request, res: Response<any, Record<string, any>>): Promise<Response<any, Record<string, any>>> {
+    try {
+      const multiFom: IRequestMultiPartDTO = req.body;
+
+      const data = await this.multiDataService.execute(multiFom);
+
+      if (req.files) {
         return this.respondCreated(res, {
-          message: [clinicalEvolution, labReportResult, imageResult],
+          multiFom,
         });
       }
-      return this.respondCreated(res, { message: "Not exist files" });
+      return this.respondCreated(res, { data });
     } catch (error: any) {
       if (error instanceof AppValidationError) {
         return this.respondValidationError(res, error);

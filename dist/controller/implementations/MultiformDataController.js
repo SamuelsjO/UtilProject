@@ -18,7 +18,15 @@ class MultiformDataController extends BaseController_1.default {
     executeImpl(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                return this.respondCreated(res, { message: req.body.img });
+                if (req.files) {
+                    const clinicalEvolution = "ClinicalEvolution: " + req.body.clinicalEvolution;
+                    const labReportResult = "LabResportResult: " + req.body.labReportResult;
+                    const imageResult = "ImageResult: " + req.body.imageResult;
+                    return this.respondCreated(res, {
+                        message: [clinicalEvolution, labReportResult, imageResult],
+                    });
+                }
+                return this.respondCreated(res, { message: "Not exist files" });
             }
             catch (error) {
                 if (error instanceof AppValidationError_1.default) {
@@ -30,4 +38,4 @@ class MultiformDataController extends BaseController_1.default {
     }
 }
 exports.default = MultiformDataController;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiTXVsdGlmb3JtRGF0YUNvbnRyb2xsZXIuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi9zcmMvY29udHJvbGxlci9pbXBsZW1lbnRhdGlvbnMvTXVsdGlmb3JtRGF0YUNvbnRyb2xsZXIudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7QUFDQSx5RkFBaUU7QUFDakUsdUVBQStDO0FBRS9DLE1BQXFCLHVCQUF3QixTQUFRLHdCQUFjO0lBQ2pELFdBQVcsQ0FBQyxHQUFZLEVBQUUsR0FBdUM7O1lBQy9FLElBQUk7Z0JBQ0YsT0FBTyxJQUFJLENBQUMsY0FBYyxDQUFDLEdBQUcsRUFBRSxFQUFFLE9BQU8sRUFBRSxHQUFHLENBQUMsSUFBSSxDQUFDLEdBQUcsRUFBRSxDQUFDLENBQUM7YUFDNUQ7WUFBQyxPQUFPLEtBQVUsRUFBRTtnQkFDbkIsSUFBSSxLQUFLLFlBQVksNEJBQWtCLEVBQUU7b0JBQ3ZDLE9BQU8sSUFBSSxDQUFDLHNCQUFzQixDQUFDLEdBQUcsRUFBRSxLQUFLLENBQUMsQ0FBQztpQkFDaEQ7Z0JBQ0QsT0FBTyxJQUFJLENBQUMsWUFBWSxDQUFDLEdBQUcsRUFBRSxLQUFLLENBQUMsQ0FBQzthQUN0QztRQUNILENBQUM7S0FBQTtDQUNGO0FBWEQsMENBV0MifQ==
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiTXVsdGlmb3JtRGF0YUNvbnRyb2xsZXIuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi9zcmMvY29udHJvbGxlci9pbXBsZW1lbnRhdGlvbnMvTXVsdGlmb3JtRGF0YUNvbnRyb2xsZXIudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7QUFDQSx5RkFBaUU7QUFDakUsdUVBQStDO0FBRS9DLE1BQXFCLHVCQUF3QixTQUFRLHdCQUFjO0lBQ2pELFdBQVcsQ0FDekIsR0FBWSxFQUNaLEdBQXVDOztZQUV2QyxJQUFJO2dCQUNGLElBQUksR0FBRyxDQUFDLEtBQUssRUFBRTtvQkFDYixNQUFNLGlCQUFpQixHQUNyQixxQkFBcUIsR0FBRyxHQUFHLENBQUMsSUFBSSxDQUFDLGlCQUFpQixDQUFDO29CQUNyRCxNQUFNLGVBQWUsR0FBRyxvQkFBb0IsR0FBRyxHQUFHLENBQUMsSUFBSSxDQUFDLGVBQWUsQ0FBQztvQkFDeEUsTUFBTSxXQUFXLEdBQUcsZUFBZSxHQUFHLEdBQUcsQ0FBQyxJQUFJLENBQUMsV0FBVyxDQUFDO29CQUUzRCxPQUFPLElBQUksQ0FBQyxjQUFjLENBQUMsR0FBRyxFQUFFO3dCQUM5QixPQUFPLEVBQUUsQ0FBQyxpQkFBaUIsRUFBRSxlQUFlLEVBQUUsV0FBVyxDQUFDO3FCQUMzRCxDQUFDLENBQUM7aUJBQ0o7Z0JBQ0QsT0FBTyxJQUFJLENBQUMsY0FBYyxDQUFDLEdBQUcsRUFBRSxFQUFFLE9BQU8sRUFBRSxpQkFBaUIsRUFBRSxDQUFDLENBQUM7YUFDakU7WUFBQyxPQUFPLEtBQVUsRUFBRTtnQkFDbkIsSUFBSSxLQUFLLFlBQVksNEJBQWtCLEVBQUU7b0JBQ3ZDLE9BQU8sSUFBSSxDQUFDLHNCQUFzQixDQUFDLEdBQUcsRUFBRSxLQUFLLENBQUMsQ0FBQztpQkFDaEQ7Z0JBQ0QsT0FBTyxJQUFJLENBQUMsWUFBWSxDQUFDLEdBQUcsRUFBRSxLQUFLLENBQUMsQ0FBQzthQUN0QztRQUNILENBQUM7S0FBQTtDQUNGO0FBeEJELDBDQXdCQyJ9
